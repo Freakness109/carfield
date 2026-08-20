@@ -1,6 +1,8 @@
 #pragma once
 
 #include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
 
 #define PAGE_SIZE 0x1000ULL // 4kiB
 
@@ -159,6 +161,7 @@ typedef uint64_t command_t[2];
 // N = 1:   2 MiB superpages (addr[55:21] = '0) (0x00200000)
 // N = 2:   4 kiB pages      (addr[55:12] = '0) (0x00001000)
 #define SUPERPAGE_SIZE(N) ((PAGE_SIZE) << (((2-N))*9))
+#define SUPERPAGE_MASK(N) (~(SUPERPAGE_SIZE(N)-1))
 
 #define PT_LVLS (3)  // assumes sv39 for rv64
 #define PTE_INDEX_SHIFT(LEVEL) ((9 * (PT_LVLS - 1 - (LEVEL))) + 12)
@@ -252,17 +255,35 @@ typedef uint64_t command_t[2];
 
 #define IODIR_DID_OFF       (40)
 
+/***************************************************************************************************
+ *                             RISC-V Fault queue  Related Macros                                  *
+ **************************************************************************************************/
+
+#define FQB_PPN_MASK    (0x3FFFFFFFFFFC00ULL)
+
+// fqcsr masks
+#define FQCSR_FQEN      (1UL << 0)  // enable
+#define FQCSR_FIE       (1UL << 1)  // interrupt enable
+#define FQCSR_FQMF      (1UL << 8)  // memory fault
+#define FQCSR_FQOF      (1UL << 9)  // overflow
+#define FQCSR_FQON      (1UL << 16) // fault queue is on
+#define FQCSR_BUSY      (1UL << 17) // busy
+
 typedef uint64_t pte_t;
 
-extern void set_iommu_off();
-extern void set_iommu_bare();
-extern void set_iommu_1lvl();
+extern void iommu_init(void);
+extern void iommu_off(void);
+extern void iommu_bare(void);
+extern void iommu_1lvl(void);
+extern bool iommu_map(uintptr_t virt, uintptr_t phys, size_t size);
 
-extern void rv_iommu_cq_init();
+#define NOINIT __attribute__((section(".noinit.data")))
+#define PAGEALIGN __attribute__((aligned(PAGE_SIZE)))
 
-extern void s1pt_map(uint64_t p_addr, uint64_t iov_addr, uint64_t size);
+extern ddt_t root_ddt[DDT_N_ENTRIES] NOINIT PAGEALIGN;
+extern pte_t s1pt[6][PAGE_SIZE/sizeof(pte_t)] NOINIT PAGEALIGN;
+extern uint64_t command_queue[CQ_N_ENTRIES * 2] NOINIT PAGEALIGN;
+extern uint64_t fault_queue[FQ_N_ENTRIES * 4] NOINIT PAGEALIGN;
 
-extern ddt_t root_ddt[DDT_N_ENTRIES] __attribute__((aligned(PAGE_SIZE))) __attribute__((section(".noinit.data")));
-extern pte_t s1pt[6][PAGE_SIZE/sizeof(pte_t)] __attribute__((aligned(PAGE_SIZE))) __attribute__((section(".noinit.data")));
-extern uint64_t command_queue[CQ_N_ENTRIES * 2 * sizeof(uint64_t)] __attribute__((aligned(PAGE_SIZE))) __attribute__((section(".noinit.data")));
-extern uint64_t fault_queue[FQ_N_ENTRIES * 4 * sizeof(uint64_t)] __attribute__((aligned(PAGE_SIZE))) __attribute__((section(".noinit.data")));
+#undef NOINIT
+#undef PAGEALIGN
