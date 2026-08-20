@@ -42,7 +42,7 @@ int main(void) {
     car_enable_domain(CAR_SPATZ_RST);
 
     load_binary();
-    fencei();
+    fence();
 
     writew(ELF_BOOT_ADDR, CAR_FP_CLUSTER_PERIPHERAL_CLUSTER_BOOT_CONTROL_REG_ADDR(car_spatz_cluster));
 
