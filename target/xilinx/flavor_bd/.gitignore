@@ -2,7 +2,7 @@
 /out/
 # Bender
 /scripts/add_sources.tcl*
-/scripts/add_includes.tcl
+/scripts/add_includes.tcl*
 # Vivado
 /.Xil
 /carfield_*
