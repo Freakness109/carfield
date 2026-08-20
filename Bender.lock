@@ -492,6 +492,15 @@ packages:
     - axi
     - common_cells
     - common_verification
+  reqrsp_interface:
+    revision: null
+    version: null
+    source:
+      Path: .bender/git/checkouts/spatz-d72d4c3c17553134/hw/ip/reqrsp_interface
+    dependencies:
+    - axi
+    - common_cells
+    - tech_cells_generic
   riscv-dbg:
     revision: 138d74bcaa90c70180c12215db3776813d2a95f2
     version: 0.8.0
@@ -547,6 +556,15 @@ packages:
     - axi
     - axi_stream
     - common_cells
+  snitch:
+    revision: null
+    version: null
+    source:
+      Path: .bender/git/checkouts/spatz-d72d4c3c17553134/hw/ip/snitch
+    dependencies:
+    - common_cells
+    - riscv-dbg
+    - tech_cells_generic
   softex:
     revision: a93ddff106ca3596660584ce6c7f77fb2a8475e3
     version: null
@@ -560,10 +578,10 @@ packages:
     - hwpe-stream
     - ibex
   spatz:
-    revision: 51f78b0c49b6a971ddb61b90e8aaca0b024f6b46
+    revision: 7fa23e5544911a6cf7b3e3984e480c119b4d7189
     version: null
     source:
-      Git: https://github.com/pulp-platform/spatz.git
+      Git: https://github.com/Freakness109/spatz.git
     dependencies:
     - axi
     - axi_riscv_atomics
@@ -572,7 +590,21 @@ packages:
     - fpnew
     - idma
     - register_interface
+    - reqrsp_interface
     - riscv-dbg
+    - snitch
+    - spatz_vpu
+    - tech_cells_generic
+  spatz_vpu:
+    revision: 56a44457ed81a93d67715f61914a5583a4728651
+    version: null
+    source:
+      Git: https://github.com/Freakness109/spatz_vpu.git
+    dependencies:
+    - common_cells
+    - fpnew
+    - reqrsp_interface
+    - snitch
     - tech_cells_generic
   tech_cells_generic:
     revision: 7968dd6e6180df2c644636bc6d2908a49f2190cf
