@@ -149,7 +149,7 @@ typedef uint64_t command_t[2];
  *                             RISC-V Page Tables Related Macros                                   *
  **************************************************************************************************/
 
-#define BIT_MASK(pos, len) ( ( (1ULL<<(len)) - 1) << (pos) )
+#define IOMMU_BIT_MASK(pos, len) ( ( (1ULL<<(len)) - 1) << (pos) )
 
 #define PT_SIZE (PAGE_SIZE)
 #define PAGE_ADDR_MSK (~(PAGE_SIZE - 1))  // ... 1111 1111 0000 0000 0000
@@ -162,10 +162,10 @@ typedef uint64_t command_t[2];
 
 #define PT_LVLS (3)  // assumes sv39 for rv64
 #define PTE_INDEX_SHIFT(LEVEL) ((9 * (PT_LVLS - 1 - (LEVEL))) + 12)
-#define PTE_ADDR_MSK BIT_MASK(12, 44)
+#define PTE_ADDR_MSK IOMMU_BIT_MASK(12, 44)
 
 #define PTE_INDEX(LEVEL, ADDR) (((ADDR) >> PTE_INDEX_SHIFT(LEVEL)) & (0x1FF))
-#define PTE_FLAGS_MSK BIT_MASK(0, 8)
+#define PTE_FLAGS_MSK IOMMU_BIT_MASK(0, 8)
 
 #define PTE_VALID   (1ULL << 0)
 #define PTE_READ    (1ULL << 1)
@@ -189,7 +189,7 @@ typedef uint64_t command_t[2];
 
 #define PTE_RSW_OFF (8)
 #define PTE_RSW_LEN (2)
-#define PTE_RSW_MSK BIT_MASK(PTE_RSW_OFF, PTE_RSW_LEN)
+#define PTE_RSW_MSK IOMMU_BIT_MASK(PTE_RSW_OFF, PTE_RSW_LEN)
 
 #define STAGE1_PERM_1GIB    (PTE_V | PTE_AD | PTE_U | PTE_RWX)
 #define STAGE1_PERM_2MIB    (PTE_V | PTE_AD | PTE_U | PTE_RWX)
