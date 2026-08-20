@@ -75,21 +75,21 @@ extern void *__regs_rtc_freq_base_addr__;
 #define CAR_FP_CLUSTER_PERIPHS_BASE_ADDR(BASE) (BASE + 0x20000)
 
 // HyperRAM
-#define CAR_HYPERRAM_BASE_ADDR 0x80400000
-#define CAR_HYPERRAM_END_ADDR  0x80800000
+#define CAR_HYPERRAM_BASE_ADDR ((void*)0x80400000)
+#define CAR_HYPERRAM_END_ADDR  ((void*)0x80800000)
 
 // Peripheral devices
 // from cheshire
-#define CAR_BOOTROM_BASE_ADDR        0x000002000000
-#define CAR_CLINT_BASE_ADDR          0x000002040000 // for both cores
-#define CAR_IRQ_ROUTER_BASE_ADDR     0x000002080000
-#define CAR_IRQ_AXI_REALM_BASE_ADDR  0x0000020c0000
-#define CAR_CHESHIRE_CFG_BASE_ADDR   0x000003000000
-#define CAR_LLC_CFG_BASE_ADDR        0x000003001000
-#define CAR_CLIC_CFG_BASE_ADDR(id)   0x000008000000
+#define CAR_BOOTROM_BASE_ADDR        ((void*)0x000002000000)
+#define CAR_CLINT_BASE_ADDR          ((void*)0x000002040000) // for both cores
+#define CAR_IRQ_ROUTER_BASE_ADDR     ((void*)0x000002080000)
+#define CAR_IRQ_AXI_REALM_BASE_ADDR  ((void*)0x0000020c0000)
+#define CAR_CHESHIRE_CFG_BASE_ADDR   ((void*)0x000003000000)
+#define CAR_LLC_CFG_BASE_ADDR        ((void*)0x000003001000)
+#define CAR_CLIC_CFG_BASE_ADDR(id)   ((void*)0x000008000000)
 
 // from carfield proper
-#define CAR_PERIPHS_BASE_ADDR        0x20000000
+#define CAR_PERIPHS_BASE_ADDR        ((void*)0x20000000)
 
 #define CAR_ETHERNET_OFFSET          0x0000
 #define CAR_CAN_OFFSET               0x1000
@@ -110,7 +110,7 @@ extern void *__regs_rtc_freq_base_addr__;
 
 // Mailbox
 #define CAR_NUM_MAILBOXES            25
-#define CAR_MBOX_BASE_ADDR           0x40000000
+#define CAR_MBOX_BASE_ADDR           ((void*)0x40000000)
 
 #define MBOX_INT_SND_STAT_OFFSET     0x00
 #define MBOX_INT_SND_SET_OFFSET      0x04
@@ -136,7 +136,7 @@ extern void *__regs_rtc_freq_base_addr__;
 
 
 // PLL
-#define CAR_PLL_BASE_ADDRESS         0x20020000
+#define CAR_PLL_BASE_ADDRESS         ((void*)0x20020000)
 #define PLL_ADDR_SPACE               0x200
 #define PLL_BASE_ADDRESS(id)         (CAR_PLL_BASE_ADDRESS + (id+1)*PLL_ADDR_SPACE)
 

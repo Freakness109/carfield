@@ -53,11 +53,11 @@ int main(void) {
     writew(1, CAR_MBOX_BASE_ADDR +  MBOX_INT_SND_EN_OFFSET + (CAR_FP_CLUSTER_MBOX_CORE1_ID*0x100));
 
     volatile uint32_t spatzd_corestatus;
-    volatile uintptr_t *spatzd_corestatus_addr = (uintptr_t*)CAR_FP_CLUSTER_PERIPHERAL_CORESTATUS_REG_ADDR(car_spatz_cluster);
+    volatile uint32_t *spatzd_corestatus_addr = (volatile uint32_t*)CAR_FP_CLUSTER_PERIPHERAL_CORESTATUS_REG_ADDR(car_spatz_cluster);
 
-    while (!(uint32_t)readw(spatzd_corestatus_addr))
+    while (!readw(spatzd_corestatus_addr))
     	;
-    spatzd_corestatus = (uint32_t) readw(spatzd_corestatus_addr);
+    spatzd_corestatus = readw(spatzd_corestatus_addr);
 
     //while (!readw((uint32_t *)SPATZ_CLUSTER_PERIPHERAL_EOC_REG_ADDR))
     //	;

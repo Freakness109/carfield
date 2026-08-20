@@ -141,13 +141,14 @@ static inline enum car_clk car_clkd_from_rstd(enum car_rst rst)
     case CAR_SPATZ_RST:
 	return CAR_SPATZ_CLK;
     case CAR_L2_RST:
+    default:
 	return CAR_L2_CLK;
     }
 }
 
 void car_set_isolate(enum car_rst rst, enum car_isolation_status status)
 {
-    writew(status, CAR_SOC_CTRL_BASE_ADDR(car_soc_ctrl) + car_get_ISOLATE_offset(rst));
+    writew(status, (void*)((uint8_t*)CAR_SOC_CTRL_BASE_ADDR(car_soc_ctrl)) + car_get_ISOLATE_offset(rst));
     fence();
     while (readw(CAR_SOC_CTRL_BASE_ADDR(car_soc_ctrl) + car_get_ISOLATE_STATUS_offset(rst)) !=
 	   status)
@@ -295,15 +296,15 @@ int car_irq_router_range_disable(int lower, int upper, enum car_irq_router_targe
 void prepare_safed_boot () {
 
 	// Select bootmode
-	volatile uintptr_t *bootmode_addr = (uintptr_t*)CAR_SAFETY_ISLAND_BOOTMODE_ADDR(car_safety_island);
+	volatile uint32_t *bootmode_addr = (uint32_t*)CAR_SAFETY_ISLAND_BOOTMODE_ADDR(car_safety_island);
 	writew(1, bootmode_addr);
 
 	// Write entry point into boot address
-	volatile uintptr_t *bootaddr_addr = (uintptr_t*)CAR_SAFETY_ISLAND_BOOTADDR_ADDR(car_safety_island);
-	writew(CAR_SAFETY_ISLAND_ENTRY_POINT(car_safety_island), bootaddr_addr);
+	volatile uint32_t *bootaddr_addr = (uint32_t*)CAR_SAFETY_ISLAND_BOOTADDR_ADDR(car_safety_island);
+	writew((uint32_t)CAR_SAFETY_ISLAND_ENTRY_POINT(car_safety_island), bootaddr_addr);
 
 	// Assert fetch enable
-	volatile uintptr_t *fetchen_addr = (uintptr_t*)CAR_SAFETY_ISLAND_FETCHEN_ADDR(car_safety_island);
+	volatile uint32_t *fetchen_addr = (uint32_t*)CAR_SAFETY_ISLAND_FETCHEN_ADDR(car_safety_island);
 	writew(1, fetchen_addr);
 
 }
@@ -311,9 +312,9 @@ void prepare_safed_boot () {
 uint32_t poll_safed_corestatus () {
 
 	volatile uint32_t corestatus;
-	volatile uintptr_t *corestatus_addr = (uintptr_t*)CAR_SAFETY_ISLAND_CORESTATUS_ADDR(car_safety_island);
+	volatile uint32_t *corestatus_addr = (uint32_t*)CAR_SAFETY_ISLAND_CORESTATUS_ADDR(car_safety_island);
 	// TODO: Add a timeut to not poll indefinitely
-	while (((uint32_t)readw(corestatus_addr) & 0x80000000) == 0)
+	while ((readw(corestatus_addr) & 0x80000000) == 0)
 	    ;
 
 	corestatus = (uint32_t) readw(corestatus_addr);
@@ -346,10 +347,10 @@ uint32_t safed_offloader_blocking () {
 
 void pulp_cluster_set_bootaddress(uint32_t pulp_boot_addr) {
 
-  volatile uint32_t cluster_boot_reg_addr = CAR_INT_CLUSTER_BOOT_ADDR_REG(car_integer_cluster);
+  volatile uint32_t *cluster_boot_reg_addr = CAR_INT_CLUSTER_BOOT_ADDR_REG(car_integer_cluster);
 
   for (int i = 0; i < IntClustNumCores; i++) {
-    writew(pulp_boot_addr, (uint32_t*)(cluster_boot_reg_addr));
+    writew(pulp_boot_addr, cluster_boot_reg_addr);
     cluster_boot_reg_addr += 0x4;
   }
 }
