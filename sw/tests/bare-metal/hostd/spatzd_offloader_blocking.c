@@ -28,15 +28,15 @@ int main(void) {
 
     // Init the HW
 
-    set_iommu_bare();
-
-    // s1pt_map(0x78000000, 0x78000000, 0x10000);
-    // // Init device directory table for device 0
-	// root_ddt[0].tc = DC_TC_VALID;
-	// root_ddt[0].iohgatp = 0;
-	// root_ddt[0].ta = 0;
-	// root_ddt[0].fsc = (((uintptr_t)&(s1pt[0][0])) >> 12) | (IOSATP_MODE_SV39);
-    // set_iommu_1lvl();
+    iommu_init();
+    // mapping needs to be a multiple of 2MiB, so map both interleaved
+    // and non-interleaved port 1 of L2 SPM
+    iommu_map(0x78000000, 0x78000000, 0x200000);
+    // map 1 GiB of RAM
+    iommu_map(0x80000000, 0x80000000, 0x40000000);
+    // map most peripherals
+    iommu_map(0x03000000, 0x03000000, 0x200000);
+    iommu_1lvl();
 
     // Spatz Island
     car_enable_domain(CAR_SPATZ_RST);
