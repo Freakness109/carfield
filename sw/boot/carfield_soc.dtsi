@@ -158,19 +158,26 @@
     };
     safety-island@60000000 {
       compatible = "safety-island,carfield";
-      reg = <0x0 0x60000000 0x0 0x800000>;
+        reg = <0x0 0x60000000 0x0 0x20000>,
+        <0x0 0x6020000 0x0 0x1000>;
+        reg-names = "mem", "cfg";
       // Link to the buffer for this device
       //memory-region = <&reserved_dev_buffer>;
     };
     integer-cluster@50000000 {
       compatible = "integer-cluster,carfield";
-      reg = <0x0 0x50000000 0x0 0x800000>;
+        reg = <0x0 0x50000000 0x0 0x20000>,
+        <0x0 0x50020000 0x0 0x1000>;
+        reg-names = "mem", "cfg";
       // Link to the buffer for this device
       //memory-region = <&reserved_dev_buffer>;
     };
     spatz-cluster@51000000 {
       compatible = "spatz-cluster,carfield";
-      reg = <0x0 0x51000000 0x0 0x800000>;
+        reg = <0x0 0x51000000 0x0 0x20000>,
+        <0x0 0x51020000 0x0 0x1000>;
+        reg-names = "mem", "cfg";
+	// reg = <0x0 0x51000000 0x0 0x21000>;
       // Link to the buffer for this device
      // memory-region = <&reserved_dev_buffer>;
       iommus = <&riscv_iommu>;
